@@ -1,5 +1,7 @@
 import axios from "axios";
 import Notiflix from 'notiflix';
+import "simplelightbox/dist/simple-lightbox.min.css";
+
 
 document.addEventListener('DOMContentLoaded', function() {
   const form = document.getElementById('search-form');
@@ -50,12 +52,15 @@ document.addEventListener('DOMContentLoaded', function() {
         hideLoadMoreButton();
       }
 
+   // Pokaż powiadomienie z liczbą znalezionych obrazków
+    Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+
     } catch (error) {
       console.error('Error fetching images:', error);
       Notiflix.Notify.failure('An error occurred while fetching images. Please try again later.');
     }
   });
-
+ 
   loadMoreBtn.addEventListener('click', async function() {
     currentPage++; // Zwiększamy wartość strony
 
@@ -138,4 +143,10 @@ document.addEventListener('DOMContentLoaded', function() {
   function hideLoadMoreButton() {
     loadMoreBtn.style.display = 'none';
   }
+});
+document.addEventListener('DOMContentLoaded', function () {
+  const lightbox = new SimpleLightbox('.gallery a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+  });
 });

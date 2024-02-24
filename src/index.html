@@ -11,14 +11,30 @@
 </head>
 
 <body>
-  <h1>Example title</h1>
-  <form class="search-form" id="search-form">
-    <input type="text" name="searchQuery" autocomplete="off" placeholder="Search images..." />
-    <button type="submit">Search</button>
-  </form>
-  <div class="gallery">
-    <!-- Obraz karty -->
-  </div>
+  <header class="filter-header">
+    <div class="container navigation">
+      <form class="search-form" id="search-form">
+        <input type="text" name="searchQuery" autocomplete="off" placeholder="Search images..." />
+        <button type="submit">Search</button>
+      </form>
+    </div>
+  </header>
+  <main>
+
+    <section class="section boxes">
+      <div class="container">
+        <h2 class="visually-hidden">Pictures</h2>
+        <ul class="list box-position">
+          <li class="filter-photos-list">
+            <div class="gallery"></div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <button type="button" class="load-more container" style="display: none;">Load more</button>
+
+  </main>
 </body>
 
 </html>
