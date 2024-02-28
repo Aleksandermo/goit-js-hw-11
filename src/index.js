@@ -1,7 +1,7 @@
+import SimpleLightbox from 'simplelightbox';
 import axios from "axios";
 import Notiflix from 'notiflix';
-import "simplelightbox/dist/simple-lightbox.min.css";
-
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 document.addEventListener('DOMContentLoaded', function() {
   const form = document.getElementById('search-form');
@@ -52,8 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
         hideLoadMoreButton();
       }
 
-   // Pokaż powiadomienie z liczbą znalezionych obrazków
-    Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+      // Pokaż powiadomienie z liczbą znalezionych obrazków
+      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
 
     } catch (error) {
       console.error('Error fetching images:', error);
@@ -97,6 +97,9 @@ document.addEventListener('DOMContentLoaded', function() {
     gallery.innerHTML = ''; // Wyczyść zawartość galerii przed dodaniem nowych obrazów
 
     images.forEach(image => {
+      const link = document.createElement('a'); // Utwórz nowy element <a>
+      link.href = image.largeImageURL; // Ustaw atrybut href na adres URL obrazu
+
       const card = document.createElement('div');
       card.classList.add('photo-card');
 
@@ -132,7 +135,9 @@ document.addEventListener('DOMContentLoaded', function() {
       card.appendChild(img);
       card.appendChild(info);
 
-      gallery.appendChild(card);
+      link.appendChild(card); // Dodaj div photo-card do linku
+
+      gallery.appendChild(link); // Dodaj link do galerii
     });
   }
 
@@ -143,8 +148,8 @@ document.addEventListener('DOMContentLoaded', function() {
   function hideLoadMoreButton() {
     loadMoreBtn.style.display = 'none';
   }
-});
-document.addEventListener('DOMContentLoaded', function () {
+
+  // Inicjalizacja SimpleLightbox po załadowaniu strony
   const lightbox = new SimpleLightbox('.gallery a', {
     captionsData: 'alt',
     captionDelay: 250,
