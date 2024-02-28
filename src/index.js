@@ -1,27 +1,30 @@
-import SimpleLightbox from 'simplelightbox';
 import axios from "axios";
 import Notiflix from 'notiflix';
+import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 document.addEventListener('DOMContentLoaded', function() {
   const form = document.getElementById('search-form');
   const gallery = document.querySelector('.gallery');
   const loadMoreBtn = document.querySelector('.load-more');
-  let currentPage = 1; // Początkowa wartość strony
-  const perPage = 40; // Liczba obiektów na stronie
+  let currentPage = 1;
+  const perPage = 40; 
+
+  const lightbox = new SimpleLightbox('.gallery a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+  });
 
   form.addEventListener('submit', async function(event) {
-    event.preventDefault(); // Zapobiegamy domyślnej akcji przesyłania formularza
+    event.preventDefault(); 
 
-    const searchQuery = this.elements.searchQuery.value.trim(); // Pobieramy treść wyszukiwania
+    const searchQuery = this.elements.searchQuery.value.trim(); 
 
     if (searchQuery === '') {
-      // Jeśli pole wyszukiwania jest puste, nie wykonujemy żądania
       return;
     }
 
     try {
-      // Resetujemy wartość strony przy każdym nowym wyszukiwaniu
       currentPage = 1;
 
       const response = await axios.get('https://pixabay.com/api/', {
@@ -31,28 +34,24 @@ document.addEventListener('DOMContentLoaded', function() {
           image_type: 'photo',
           orientation: 'horizontal',
           safesearch: true,
-          page: currentPage, // Ustawiamy wartość strony
-          per_page: perPage // Ustawiamy liczbę obiektów na stronie
+          page: currentPage, 
+          per_page: perPage 
         }
       });
-
-      const totalHits = response.data.totalHits; // Całkowita liczba obrazków pasujących do kryteriów wyszukiwania
+      const totalHits = response.data.totalHits; 
 
       if (totalHits === 0) {
-        // Jeśli nie znaleziono obrazów, wyświetlamy odpowiednie powiadomienie
         Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
         return;
       }
 
-      renderImages(response.data.hits); // Wyświetlamy obrazy w galerii
-      showLoadMoreButton(); // Pokazujemy przycisk "Load more"
+      renderImages(response.data.hits); 
+      showLoadMoreButton(); 
 
       if (response.data.hits.length < perPage) {
-        // Jeśli liczba obiektów jest mniejsza niż liczba na stronie, ukrywamy przycisk "Load more"
         hideLoadMoreButton();
       }
 
-      // Pokaż powiadomienie z liczbą znalezionych obrazków
       Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
 
     } catch (error) {
@@ -62,9 +61,9 @@ document.addEventListener('DOMContentLoaded', function() {
   });
  
   loadMoreBtn.addEventListener('click', async function() {
-    currentPage++; // Zwiększamy wartość strony
+    currentPage++; 
 
-    const searchQuery = form.elements.searchQuery.value.trim(); // Pobieramy treść wyszukiwania
+    const searchQuery = form.elements.searchQuery.value.trim();
 
     try {
       const response = await axios.get('https://pixabay.com/api/', {
@@ -74,15 +73,14 @@ document.addEventListener('DOMContentLoaded', function() {
           image_type: 'photo',
           orientation: 'horizontal',
           safesearch: true,
-          page: currentPage, // Ustawiamy aktualną wartość strony
-          per_page: perPage // Ustawiamy liczbę obiektów na stronie
+          page: currentPage, 
+          per_page: perPage 
         }
       });
 
-      renderImages(response.data.hits); // Wyświetlamy nowe obrazy w galerii
+      renderImages(response.data.hits);
 
       if (currentPage * perPage >= response.data.totalHits) {
-        // Jeśli doszliśmy do końca wyników, ukrywamy przycisk "Load more"
         hideLoadMoreButton();
         Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
       }
@@ -94,17 +92,18 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   function renderImages(images) {
-    gallery.innerHTML = ''; // Wyczyść zawartość galerii przed dodaniem nowych obrazów
+    gallery.innerHTML = ''; 
 
     images.forEach(image => {
-      const link = document.createElement('a'); // Utwórz nowy element <a>
-      link.href = image.largeImageURL; // Ustaw atrybut href na adres URL obrazu
+      const link = document.createElement('a'); 
+      link.href = image.largeImageURL;
+      link.dataset.lightbox = 'gallery'; 
 
       const card = document.createElement('div');
       card.classList.add('photo-card');
 
       const img = document.createElement('img');
-      img.src = image.largeImageURL;
+      img.src = image.webformatURL;
       img.alt = image.tags;
       img.loading = 'lazy';
 
@@ -135,10 +134,12 @@ document.addEventListener('DOMContentLoaded', function() {
       card.appendChild(img);
       card.appendChild(info);
 
-      link.appendChild(card); // Dodaj div photo-card do linku
+      link.appendChild(card);
 
-      gallery.appendChild(link); // Dodaj link do galerii
+      gallery.appendChild(link);
     });
+
+    lightbox.refresh(); // Odświeża SimpleLightbox po dodaniu nowych obrazów
   }
 
   function showLoadMoreButton() {
@@ -148,10 +149,4 @@ document.addEventListener('DOMContentLoaded', function() {
   function hideLoadMoreButton() {
     loadMoreBtn.style.display = 'none';
   }
-
-  // Inicjalizacja SimpleLightbox po załadowaniu strony
-  const lightbox = new SimpleLightbox('.gallery a', {
-    captionsData: 'alt',
-    captionDelay: 250,
-  });
 });
