@@ -10,9 +10,7 @@
   --modalcolor: #fcfcfc;
   --placeholder: #2e2f4266;
   --lightslate: #8e8f99;
-
   --color-neutral-dark: #303030;
-
   --tr-fn: cubic-bezier(0.4, 0, 0.2, 1);
   --tr-duration: 250ms;
 }
@@ -78,22 +76,41 @@
   justify-content: center;
   gap: 24px;
 }
-
 .gallery {
   list-style-type: none;
-  display: grid;
-  max-width: 1140px;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  grid-auto-rows: 240px;
-  grid-gap: 40px;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   margin-left: auto;
   margin-right: auto;
 }
-
 .photo-card img {
   max-height: 200px;
   width: auto;
+  margin-bottom: 10px;
+  max-width: 100%;
+}
+.photo-card {
+  border: 1px solid var(--lightslate);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 20px;
+  width: 300px;
+  color: var(--ocean);
+  text-align: center;
+  padding: 20px;
+  transition: all var(--tr-duration) var(--tr-fn);
+}
+.photo-card p {
+  transition: color var(--tr-duration) var(--tr-fn);
+}
+.photo-card:hover {
+  background-color: var(--cornflower);
+  color: var(--studio);
+  cursor: pointer;
+}
+.photo-card:hover p {
+  color: var(--studio);
 }
 .load-more {
   margin-bottom: 120px;
