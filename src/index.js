@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
       currentPage = 1;
 
+      gallery.innerHTML = '';
+      
       const response = await axios.get('https://pixabay.com/api/', {
         params: {
           key: '42532362-ad0f7478c7dcbf41d5bb43b25',
@@ -155,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
       currentPage++; 
 
       const searchQuery = form.elements.searchQuery.value.trim();
-
+      
       try {
         const response = await axios.get('https://pixabay.com/api/', {
           params: {
